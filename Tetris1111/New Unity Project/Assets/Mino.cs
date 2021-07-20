@@ -12,6 +12,8 @@ public class Mino : MonoBehaviour
     private static int width = 10;
     private static int height = 20;
 
+    public string type{get;set;}
+
     // mino回転
     public Vector3 rotationPoint;
 
@@ -130,8 +132,8 @@ public class Mino : MonoBehaviour
             int roundX = Mathf.RoundToInt(children.transform.position.x);
             int roundY = Mathf.RoundToInt(children.transform.position.y);
 
-            Debug.Log(roundX);
-            Debug.Log(roundY);
+           // Debug.Log(roundX);
+           // Debug.Log(roundY);
             
             grid[roundX, roundY] = children;
         }
