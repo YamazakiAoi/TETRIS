@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class Mino : MonoBehaviour
+public class Mino : MonoBehaviourPunCallbacks
 {
     public float previousTime;
     // minoの落ちる時間
@@ -20,7 +19,10 @@ public class Mino : MonoBehaviour
 
     void Update()
     {
-        MinoMovememt();
+        if(photonView.IsMine)
+        {
+            MinoMovememt();
+        }
     }
 
     private void MinoMovememt()

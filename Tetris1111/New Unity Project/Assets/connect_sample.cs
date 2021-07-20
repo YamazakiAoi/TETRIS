@@ -4,10 +4,12 @@ using UnityEngine;
 
 
 // PUNのコールバックを受け取れるようにする
-public class SampleScene : MonoBehaviourPunCallbacks
+public class connect_sample : MonoBehaviourPunCallbacks
 {
-    private void start()
+    public string[] Minos={"Imino","Jmino","Lmino","Omino","Smino","Tmino","Zmino"};
+    public void start()
     {
+        Debug.Log("startが動きます");
         //マスターサーバーに接続
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -15,6 +17,7 @@ public class SampleScene : MonoBehaviourPunCallbacks
     //マスターサーバーに接続できたときに呼ばれるコールバック
     public override void OnConnectedToMaster()
     {
+        Debug.Log("マスターサーバーに接続しました");
         //ランダムなルームに参加
         PhotonNetwork.JoinRandomRoom();
 
@@ -24,6 +27,11 @@ public class SampleScene : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() 
     {
         Debug.Log("ルームへ参加しました");
+         //ここに同期させたいオブジェクトなどを書いていく
+        //自身のアバター(ネットワークオブジェクト)を呼び出す
+        //動かしているミノをアバターとして設定する
+
+        NewMino();
     }
 
     //ルームの参加に失敗したときに呼ばれるコールバック
@@ -37,19 +45,13 @@ public class SampleScene : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(null,roomOptions);
     }
 
-
-    /*
-    // ゲームサーバーへの接続が成功した時に呼ばれるコールバック
-    public override void OnJoinedRoom() 
+    public void NewMino() 
     {
-        //ここに同期させたいオブジェクトなどを書いていく
-        //自身のアバター(ネットワークオブジェクト)を呼び出す
-        //動かしているミノをアバターとして設定する
-
+        PhotonNetwork.Instantiate(Minos[Random.Range(0, Minos.Length)], vector3(5,17,0), Quaternion.identity);
     }
     //ルームを退出する処理を書く
     //ゲームボードを右にもうひとつ増やして対戦相手を表示させる必要がある
 
-    */
+    
 }
 
