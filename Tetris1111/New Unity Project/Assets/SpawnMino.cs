@@ -27,12 +27,13 @@ public class SpawnMino : MonoBehaviour
     public void NewMino()
     {
         
-        var obj = Instantiate(Minos[ary2[MinoShape]], transform.position, Quaternion.identity);
+        //var obj = Instantiate(Minos[ary2[MinoShape]], transform.position, Quaternion.identity);
+        var obj = Instantiate(Minos[0], transform.position, Quaternion.identity);
         obj.GetComponent<Mino>().type = Minos[ary2[MinoShape]].name;
 
-        Debug.Log(MinoShape);
-        Debug.Log(ary2[MinoShape]);
-        Debug.Log(Minos[ary2[MinoShape]].name);
+        //Debug.Log(MinoShape);
+        //Debug.Log(ary2[MinoShape]);
+        //Debug.Log(Minos[ary2[MinoShape]].name);
 
         MinoShape ++;
         if(MinoShape >= 7)
@@ -46,9 +47,5 @@ public class SpawnMino : MonoBehaviour
     public void Shuffle()
     {
         ary2 = ary1.OrderBy(i => Guid.NewGuid()).ToArray();
-        Debug.Log(ary2[0]);
-        Debug.Log(ary2[1]);
-        Debug.Log(ary2[2]);
-        Debug.Log(ary2[3]);
     }
 }

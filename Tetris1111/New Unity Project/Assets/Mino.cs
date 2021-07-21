@@ -20,9 +20,16 @@ public class Mino : MonoBehaviour
     // grid
     private static Transform[,] grid = new Transform[width, height];
 
+    
+    void start ()
+    {
+        
+    }
+
     void Update()
     {
         MinoMovememt();
+        Debug.Log(this.name);
     }
 
     private void MinoMovememt()
@@ -61,14 +68,47 @@ public class Mino : MonoBehaviour
                 CheckLines();
                 this.enabled = false;
                 FindObjectOfType<SpawnMino>().NewMino();
+                
             }
 
             previousTime = Time.time;
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetKeyDown(KeyCode.UpArrow)) 
         {
-            // ブロックの回転
-            transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+            while(ValidMovement())
+                transform.position += new Vector3(0, -1, 0);
+            
+            if (!ValidMovement()) 
+            {
+                transform.position -= new Vector3(0, -1, 0);
+                AddToGrid();
+                // 今回の追加
+                CheckLines();
+                this.enabled = false;
+                FindObjectOfType<SpawnMino>().NewMino();
+                
+            }
+
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            if(this.name != "Omino(Clone)")
+                {
+                    // ブロックの回転
+                    RotateLeft();
+                    transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+                }
+            
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            if(this.name != "Omino(Clone)")
+                {
+                    // ブロックの回転
+                    RotateRight();
+                    transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+                }
+            
         }
     }
 
@@ -133,11 +173,215 @@ public class Mino : MonoBehaviour
             int roundY = Mathf.RoundToInt(children.transform.position.y);
 
            // Debug.Log(roundX);
-           // Debug.Log(roundY);
+           // Debug.Log(Mathf.RoundToInt(transform.position.x));
             
             grid[roundX, roundY] = children;
         }
         
+    }
+
+    void RotateRight()
+    {
+        int count = 0; 
+        
+        int position_x = Mathf.RoundToInt(transform.position.x);
+        int position_y = Mathf.RoundToInt(transform.position.y);
+        
+
+        switch(this.name)
+        {
+            case "Imino(Clone)": 
+                foreach(Transform children in transform)
+                {
+                    if(Mathf.RoundToInt(transform.position.y) < Mathf.RoundToInt(children.transform.position.y))
+                    {
+                        count ++;
+                    }
+                }
+
+                switch(count)
+                {
+                    case 1:
+                        if(position_x == width - 1)
+                        {
+                            transform.position += new Vector3(-1, 1, 0);
+                        }else if(position_x == 0)
+                        {
+                            transform.position += new Vector3( 2, -2, 0);
+                        }else if(position_x == 1)
+                        {
+                            transform.position += new Vector3( 1, -1, 0);
+                        }
+                    break;
+
+                    case 2:
+                        if(position_x == width - 1)
+                        {
+                            transform.position += new Vector3(-2, 2, 0);
+                        }else if(position_x == 0)
+                        {
+                            transform.position += new Vector3( 1, -1, 0);
+                        }else if(position_x == width -2)
+                        {
+                            transform.position += new Vector3( -1, -1, 0);
+                        }
+                    break;
+                }
+            break;
+
+            case "Jmino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3(-1, 1, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, -1, 0);
+                }
+            break;
+
+            case "Lmino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3( -1, -1, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, -1, 0);
+                }
+            break;
+
+            case "Smino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, 0, 0);
+                }
+                
+            break;
+
+            case "Tmino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3(-1, 1, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, -1, 0);
+                }
+               
+            break;
+
+            case "Zmino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3(-1, 1, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, -1, 0);
+                }
+                
+            break;
+
+            default: 
+            break;
+        }
+    }
+
+    void RotateLeft()
+    {
+        int count = 0; 
+        
+        int position_x = Mathf.RoundToInt(transform.position.x);
+        int position_y = Mathf.RoundToInt(transform.position.y);
+        
+
+        switch(this.name)
+        {
+            case "Imino(Clone)": 
+                foreach(Transform children in transform)
+                {
+                    if(Mathf.RoundToInt(transform.position.y) < Mathf.RoundToInt(children.transform.position.y))
+                    {
+                        count ++;
+                    }
+                }
+
+                switch(count)
+                {
+                    case 1:
+                        if(position_x == width - 1)
+                        {
+                            transform.position += new Vector3(-2, -2, 0);
+                        }else if(position_x == 0)
+                        {
+                            transform.position += new Vector3( 1, 1, 0);
+                        }else if(position_x == width - 2)
+                        {
+                            transform.position += new Vector3( -1, -1, 0);
+                        }
+                    break;
+
+                    case 2:
+                        if(position_x == width - 1)
+                        {
+                            transform.position += new Vector3(-1, -1, 0);
+                        }else if(position_x == 0)
+                        {
+                            transform.position += new Vector3( 2, 2, 0);
+                        }else if(position_x == 1)
+                        {
+                            transform.position += new Vector3( 1, 1, 0);
+                        }
+                    break;
+                }
+            break;
+
+            case "Jmino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3(-1, -1, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, 1, 0);
+                }
+            break;
+
+            case "Lmino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3( -1, -1, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, 1, 0);
+                }
+            break;
+
+            case "Smino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3(-1, -1, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, 1, 0);
+                }
+                
+            break;
+
+            case "Tmino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3(-1, -1, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, 1, 0);
+                }
+               
+            break;
+
+            case "Zmino(Clone)": 
+                if(position_x == width - 1){
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(position_x == 0)
+                {
+                    transform.position += new Vector3( 1, 0, 0);
+                }
+                
+            break;
+
+            default: 
+            break;
+        }
     }
 
     // minoの移動範囲の制御
