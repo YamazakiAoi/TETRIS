@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7880206974021108073}
-  - component: {fileID: -6795860336659634}
   - component: {fileID: 3629711200481871815}
   - component: {fileID: -9082266423398616875}
+  - component: {fileID: 8163330520624657410}
   m_Layer: 0
   m_Name: Jmino
   m_TagString: Untagged
@@ -37,21 +37,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-6795860336659634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908104685102895310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da23dbecab9411648a6d92c5ceb079dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previousTime: 0
-  fallTime: 1
-  rotationPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &3629711200481871815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,7 +55,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -9082266423398616875}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -90,6 +76,21 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &8163330520624657410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908104685102895310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da23dbecab9411648a6d92c5ceb079dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  previousTime: 0
+  fallTime: 1
+  rotationPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &3331049818806580800
 GameObject:
   m_ObjectHideFlags: 0

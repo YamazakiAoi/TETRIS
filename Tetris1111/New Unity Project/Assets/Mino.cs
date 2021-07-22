@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class Mino : MonoBehaviourPunCallbacks
@@ -19,13 +20,16 @@ public class Mino : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        
+
         if(photonView.IsMine)
         {
+
             MinoMovememt();
         }
     }
 
-    private void MinoMovememt()
+    void MinoMovememt()
     {
         // 左矢印キーで左に動く
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -60,7 +64,8 @@ public class Mino : MonoBehaviourPunCallbacks
                 // 今回の追加
                 CheckLines();
                 this.enabled = false;
-                FindObjectOfType<SpawnMino>().NewMino();
+                //書き換えた
+                FindObjectOfType<Connect>().NewMino();
             }
 
             previousTime = Time.time;
@@ -141,6 +146,7 @@ public class Mino : MonoBehaviourPunCallbacks
     }
 
     // minoの移動範囲の制御
+    //これが対戦相手の止まる原因？
     bool ValidMovement()
     {
 
@@ -148,17 +154,42 @@ public class Mino : MonoBehaviourPunCallbacks
         {
             int roundX = Mathf.RoundToInt(children.transform.position.x);
             int roundY = Mathf.RoundToInt(children.transform.position.y);
+            Photon.Realtime.Player Player = PhotonNetwork.LocalPlayer;
 
-            // minoがステージよりはみ出さないように制御
-            if (roundX < 0 || roundX >= width || roundY < 0 || roundY >= height)
+            if(Player.ActorNumber == 1)
             {
-                return false;
+                width = 10;
+                height = 20;
             }
-            if (grid[roundX, roundY] != null)
+            else
             {
-                return false;
+                width = 30; 
+                height = 20;
             }
-            
+
+            if(Player.ActorNumber == 1)
+            {
+                // minoがステージよりはみ出さないように制御(左側)
+                if (roundX < 0 || roundX >= width || roundY < 0 || roundY >= height)
+                {
+                    return false;
+                }
+                if (grid[roundX, roundY] != null)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if(roundX < 20 || roundX >=width || roundY < 0 || roundY >= height)
+                {
+                    return false;
+                }
+                if(grid[roundX-20,roundY] != null)
+                {
+                    return false;
+                }
+            }
 
         }
         return true;

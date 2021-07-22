@@ -28,7 +28,7 @@ MonoBehaviour:
     EnableLobbyStatistics: 0
     NetworkLogging: 1
   DevRegion: jp
-  PunLogging: 2
+  PunLogging: 0
   EnableSupportLogger: 1
   RunInBackground: 1
   StartInOfflineMode: 0

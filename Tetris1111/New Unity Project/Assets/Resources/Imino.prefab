@@ -173,9 +173,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3394032672158223855}
-  - component: {fileID: 3909863333217961541}
   - component: {fileID: -8107269741067777768}
   - component: {fileID: -1418287250963236712}
+  - component: {fileID: -6881119767939418312}
   m_Layer: 0
   m_Name: Imino
   m_TagString: Untagged
@@ -201,21 +201,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3909863333217961541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6332209578683630787}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da23dbecab9411648a6d92c5ceb079dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previousTime: 0
-  fallTime: 1
-  rotationPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &-8107269741067777768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,6 +240,21 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &-6881119767939418312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6332209578683630787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da23dbecab9411648a6d92c5ceb079dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  previousTime: 0
+  fallTime: 1
+  rotationPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &6629215681701587012
 GameObject:
   m_ObjectHideFlags: 0
