@@ -49,6 +49,7 @@ public class Connect : MonoBehaviourPunCallbacks
             position_x = 25;
             position_y = 17;
         }
+
         NewMino();
     }
 
@@ -61,6 +62,7 @@ public class Connect : MonoBehaviourPunCallbacks
 
         // ランダムで参加できるルームが存在しないなら、新規でルームを作成する
         PhotonNetwork.CreateRoom(null,roomOptions);
+        
     }
 
     public void NewMino() 

@@ -16,12 +16,12 @@ public class Mino : MonoBehaviourPunCallbacks
     public Vector3 rotationPoint;
 
     // grid
-    private static Transform[,] grid = new Transform[width, height];
+    private static Transform[,] grid = new Transform[30, 20];
+    
 
     void Update()
     {
         
-
         if(photonView.IsMine)
         {
 
@@ -60,11 +60,13 @@ public class Mino : MonoBehaviourPunCallbacks
             if (!ValidMovement()) 
             {
                 transform.position -= new Vector3(0, -1, 0);
+                     //Debug.Log("Add to Gridが動きます");
                 AddToGrid();
                 // 今回の追加
                 CheckLines();
                 this.enabled = false;
                 //書き換えた
+                //何故か新しいのが出てこない
                 FindObjectOfType<Connect>().NewMino();
             }
 
@@ -93,7 +95,7 @@ public class Mino : MonoBehaviourPunCallbacks
     // 今回の追加 列がそろっているか確認
     bool HasLine(int i)
     {
-        for (int j = 0; j < width; j++)
+        for (int j = (width-10); j < width; j++)
         {
             if (grid[j, i] == null)
                 return false;
@@ -104,7 +106,7 @@ public class Mino : MonoBehaviourPunCallbacks
     // 今回の追加 ラインを消す
     void DeleteLine(int i)
     {
-        for (int j = 0; j < width; j++)
+        for (int j = (width-10); j < width; j++)
         {
             Destroy(grid[j, i].gameObject);
             grid[j, i] = null;
@@ -113,11 +115,12 @@ public class Mino : MonoBehaviourPunCallbacks
     }
 
     // 今回の追加 列を下げる
+    //消したラインのぶん下げる
     public void RowDown(int i)
     {
         for (int y = i; y < height; y++)
         {
-            for (int j = 0; j < width; j++)
+            for (int j = (width -10); j < width; j++)
             {
                 if (grid[j, y] != null)
                 {
@@ -129,6 +132,7 @@ public class Mino : MonoBehaviourPunCallbacks
         }
     }
 
+    //お前マジなにしてるの？
     void AddToGrid() 
     {
         
@@ -136,6 +140,7 @@ public class Mino : MonoBehaviourPunCallbacks
         {
             int roundX = Mathf.RoundToInt(children.transform.position.x);
             int roundY = Mathf.RoundToInt(children.transform.position.y);
+            
 
             Debug.Log(roundX);
             Debug.Log(roundY);
@@ -146,15 +151,15 @@ public class Mino : MonoBehaviourPunCallbacks
     }
 
     // minoの移動範囲の制御
-    //これが対戦相手の止まる原因？
     bool ValidMovement()
     {
+        Photon.Realtime.Player Player = PhotonNetwork.LocalPlayer;
 
         foreach (Transform children in transform)
         {
             int roundX = Mathf.RoundToInt(children.transform.position.x);
             int roundY = Mathf.RoundToInt(children.transform.position.y);
-            Photon.Realtime.Player Player = PhotonNetwork.LocalPlayer;
+            
 
             if(Player.ActorNumber == 1)
             {
@@ -185,7 +190,7 @@ public class Mino : MonoBehaviourPunCallbacks
                 {
                     return false;
                 }
-                if(grid[roundX-20,roundY] != null)
+                if(grid[roundX,roundY] != null)
                 {
                     return false;
                 }
