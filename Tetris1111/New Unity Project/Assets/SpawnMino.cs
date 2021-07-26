@@ -7,6 +7,7 @@ using System.Linq;
 public class SpawnMino : MonoBehaviour
 {
     public GameObject[] Minos;
+    //public GameObject wall;
     public int MinoShape = 0;
 
     // シャッフルするもとの配列
@@ -27,8 +28,8 @@ public class SpawnMino : MonoBehaviour
     public void NewMino()
     {
         
-        //var obj = Instantiate(Minos[ary2[MinoShape]], transform.position, Quaternion.identity);
-        var obj = Instantiate(Minos[0], transform.position, Quaternion.identity);
+        var obj = Instantiate(Minos[ary2[MinoShape]], transform.position, Quaternion.identity);
+        //var obj = Instantiate(Minos[0], transform.position, Quaternion.identity);
         obj.GetComponent<Mino>().type = Minos[ary2[MinoShape]].name;
 
         //Debug.Log(MinoShape);

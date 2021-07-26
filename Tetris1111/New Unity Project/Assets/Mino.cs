@@ -12,18 +12,29 @@ public class Mino : MonoBehaviour
     private static int width = 10;
     private static int height = 20;
 
+    public Transform wall;
     public string type{get;set;}
 
     // mino回転
     public Vector3 rotationPoint;
+    private int rotationType = 0;
 
     // grid
-    private static Transform[,] grid = new Transform[width, height];
+    private static Transform[,] grid = new Transform[width + 4, height + 2];
 
     
-    void start ()
+    void Start ()
     {
-        
+        for(int i = 0; i < width + 4; i ++)
+        {
+            for (int j = 0; j < height + 2;j++)
+            {
+                if(i == 0 || i == 1 ||j == 0 || j ==1 || i == width + 2 || i == width +3)
+                {
+                    grid[i,j] = wall;
+                }
+            }
+        }
     }
 
     void Update()
@@ -95,8 +106,9 @@ public class Mino : MonoBehaviour
             if(this.name != "Omino(Clone)")
                 {
                     // ブロックの回転
-                    RotateLeft();
                     transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+                    Rotate(false);
+                     Debug.Log(rotationType);
                 }
             
         }
@@ -105,8 +117,9 @@ public class Mino : MonoBehaviour
             if(this.name != "Omino(Clone)")
                 {
                     // ブロックの回転
-                    RotateRight();
                     transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+                    Rotate(true);
+                    Debug.Log(rotationType);
                 }
             
         }
@@ -128,7 +141,7 @@ public class Mino : MonoBehaviour
     // 今回の追加 列がそろっているか確認
     bool HasLine(int i)
     {
-        for (int j = 0; j < width; j++)
+        for (int j = 1; j < width + 1; j++)
         {
             if (grid[j, i] == null)
                 return false;
@@ -139,7 +152,7 @@ public class Mino : MonoBehaviour
     // 今回の追加 ラインを消す
     void DeleteLine(int i)
     {
-        for (int j = 0; j < width; j++)
+        for (int j = 2; j < width + 2; j++)
         {
             Destroy(grid[j, i].gameObject);
             grid[j, i] = null;
@@ -150,9 +163,9 @@ public class Mino : MonoBehaviour
     // 今回の追加 列を下げる
     public void RowDown(int i)
     {
-        for (int y = i; y < height; y++)
+        for (int y = i; y < height + 1; y++)
         {
-            for (int j = 0; j < width; j++)
+            for (int j = 2; j < width + 2; j++)
             {
                 if (grid[j, y] != null)
                 {
@@ -173,11 +186,373 @@ public class Mino : MonoBehaviour
             int roundY = Mathf.RoundToInt(children.transform.position.y);
 
            // Debug.Log(roundX);
-           // Debug.Log(Mathf.RoundToInt(transform.position.x));
+            Debug.Log(Mathf.RoundToInt(transform.position.x));
             
             grid[roundX, roundY] = children;
         }
         
+    }
+
+
+    void Rotate(bool Rotatefrag)
+    {
+        Vector3 Reset =  this.transform.position;
+        int Reset_type = rotationType;
+
+        if(Rotatefrag)
+        {
+            rotationType = Mathf.Abs(rotationType + 1) % 4;
+        }
+        else
+        {
+            if(rotationType == 0)
+            {
+                rotationType = 3;
+                
+            }else
+            {
+                rotationType = Mathf.Abs(rotationType - 1) % 4;
+            }
+            
+        }
+        switch(this.name)
+        {
+            case "Imino(Clone)": 
+
+                switch(rotationType)
+                {
+                    case 0:
+                        if(Rotatefrag)
+                            transform.position += new Vector3(0, 1, 0);
+                        else
+                            transform.position += new Vector3(-1, 0, 0);
+                    break;
+
+                    case 1:
+                        if(Rotatefrag)
+                            transform.position += new Vector3(1, 0, 0);
+                        else
+                            transform.position += new Vector3(0, 1, 0);
+                    break;
+
+                    case 2:
+                        if(Rotatefrag)
+                            transform.position += new Vector3(0, -1, 0);
+                        else
+                            transform.position += new Vector3(1, 0, 0);
+                    break;
+
+                    case 3:
+                        if(Rotatefrag)
+                            transform.position += new Vector3(-1, 0, 0);
+                        else
+                            transform.position += new Vector3(0, -1, 0);
+                    break;
+                }
+                
+                if(ValidMovement())
+                {
+                    break;
+                }else
+                {
+                    if(!RotateMino(Rotatefrag))
+                    {
+                        transform.position = Reset;
+                    }
+                }
+
+            break;
+
+            default: 
+                if(ValidMovement())
+                {
+                    break;
+                }else
+                {
+                    if(!RotateMino(Rotatefrag))
+                    {
+                        transform.position = Reset;
+                        rotationType = Reset_type;
+                    }
+                        
+                }
+            break;
+        }
+    }
+
+    bool RotateMino(bool rotateType)//右回転が真、左回転が偽
+    {
+        switch(this.name)
+        {
+            case "Imino(Clone)": 
+            {
+                if(rotationType == 3 && !rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(rotationType == 1 && rotateType)
+                {
+                    transform.position += new Vector3(-2, 0, 0);
+                }else if(rotationType == 0 && !rotateType)
+                {
+                    transform.position += new Vector3(2, 0, 0);
+                }else if(rotationType == 2 && rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(rotationType == 1 && !rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 3 && rotateType)
+                {
+                    transform.position += new Vector3(2, 0, 0);
+                }else if(rotationType == 2 && !rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 0 && rotateType)
+                {
+                    transform.position += new Vector3(-2, 0, 0);
+                }
+
+                if(ValidMovement())
+                {
+                    return true;
+                }
+
+                if(rotationType == 3 && !rotateType)
+                {
+                    transform.position += new Vector3(3, 0, 0);
+                }else if(rotationType == 1 && rotateType)
+                {
+                    transform.position += new Vector3(3, 0, 0);
+                }else if(rotationType == 0 && !rotateType)
+                {
+                    transform.position += new Vector3(-3, 0, 0);
+                }else if(rotationType == 2 && rotateType)
+                {
+                    transform.position += new Vector3(3, 0, 0);
+                }else if(rotationType == 1 && !rotateType)
+                {
+                    transform.position += new Vector3(-3, 0, 0);
+                }else if(rotationType == 3 && rotateType)
+                {
+                    transform.position += new Vector3(-3, 0, 0);
+                }else if(rotationType == 2 && !rotateType)
+                {
+                    transform.position += new Vector3(-3, 0, 0);
+                }else if(rotationType == 0 && rotateType)
+                {
+                    transform.position += new Vector3(3, 0, 0);
+                }
+
+                if(ValidMovement())
+                {
+                    return true;
+                }
+
+                if(rotationType == 3 && !rotateType)
+                {
+                    transform.position += new Vector3(-3, 2, 0);
+                }else if(rotationType == 1 && rotateType)
+                {
+                    transform.position += new Vector3(-3, -1, 0);
+                }else if(rotationType == 0 && !rotateType)
+                {
+                    transform.position += new Vector3(3, 1, 0);
+                }else if(rotationType == 2 && rotateType)
+                {
+                    transform.position += new Vector3(3, 2, 0);
+                }else if(rotationType == 1 && !rotateType)
+                {
+                    transform.position += new Vector3(3, -2, 0);
+                }else if(rotationType == 3 && rotateType)
+                {
+                    transform.position += new Vector3(3, 1, 0);
+                }else if(rotationType == 2 && !rotateType)
+                {
+                    transform.position += new Vector3(0, -1, 0);
+                }else if(rotationType == 0 && rotateType)
+                {
+                    transform.position += new Vector3(0, 2, 0);
+                }
+
+                if(ValidMovement())
+                {
+                    return true;
+                }
+
+                if(rotationType == 3 && !rotateType)
+                {
+                    transform.position += new Vector3(3, -3, 0);
+                }else if(rotationType == 1 && rotateType)
+                {
+                    transform.position += new Vector3(3, 3, 0);
+                }else if(rotationType == 0 && !rotateType)
+                {
+                    transform.position += new Vector3(3, -3, 0);
+                }else if(rotationType == 2 && rotateType)
+                {
+                    transform.position += new Vector3(3, -3, 0);
+                }else if(rotationType == 1 && !rotateType)
+                {
+                    transform.position += new Vector3(-3, 3, 0);
+                }else if(rotationType == 3 && rotateType)
+                {
+                    transform.position += new Vector3(-3, -3, 0);
+                }else if(rotationType == 2 && !rotateType)
+                {
+                    transform.position += new Vector3(3, 3, 0);
+                }else if(rotationType == 0 && rotateType)
+                {
+                    transform.position += new Vector3(-3, 3, 0);
+                }
+
+                if(!ValidMovement())
+                {
+                    if(rotateType)
+                    {
+                        transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+                    }else{
+                        transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+                    }
+
+                    return false;
+                }
+            }
+            break;
+
+            default: 
+                if(rotationType == 3 && !rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 1 && rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(rotationType == 0 && !rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 2 && rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 1 && !rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(rotationType == 3 && rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 2 && !rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(rotationType == 0 && rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }
+
+                if(ValidMovement())
+                {
+                    return true;
+                }
+
+                if(rotationType == 3 && !rotateType)
+                {
+                    transform.position += new Vector3(0, 1, 0);
+                }else if(rotationType == 1 && rotateType)
+                {
+                    transform.position += new Vector3(0, 1, 0);
+                }else if(rotationType == 0 && !rotateType)
+                {
+                    transform.position += new Vector3(0, -1, 0);
+                }else if(rotationType == 2 && rotateType)
+                {
+                    transform.position += new Vector3(0, -1, 0);
+                }else if(rotationType == 1 && !rotateType)
+                {
+                    transform.position += new Vector3(0, 1, 0);
+                }else if(rotationType == 3 && rotateType)
+                {
+                    transform.position += new Vector3(0, 1, 0);
+                }else if(rotationType == 2 && !rotateType)
+                {
+                    transform.position += new Vector3(0, -1, 0);
+                }else if(rotationType == 0 && rotateType)
+                {
+                    transform.position += new Vector3(0, -1, 0);
+                }
+
+                if(ValidMovement())
+                {
+                    return true;
+                }
+
+                if(rotationType == 3 && !rotateType)
+                {
+                    transform.position += new Vector3(-1, -3, 0);
+                }else if(rotationType == 1 && rotateType)
+                {
+                    transform.position += new Vector3(1, -3, 0);
+                }else if(rotationType == 0 && !rotateType)
+                {
+                    transform.position += new Vector3(-1, 3, 0);
+                }else if(rotationType == 2 && rotateType)
+                {
+                    transform.position += new Vector3(1, 3, 0);
+                }else if(rotationType == 1 && !rotateType)
+                {
+                    transform.position += new Vector3(1, -3, 0);
+                }else if(rotationType == 3 && rotateType)
+                {
+                    transform.position += new Vector3(-1, 3, 0);
+                }else if(rotationType == 2 && !rotateType)
+                {
+                    transform.position += new Vector3(1, 3, 0);
+                }else if(rotationType == 0 && rotateType)
+                {
+                    transform.position += new Vector3(1, 3, 0);
+                }
+
+                if(ValidMovement())
+                {
+                    return true;
+                }
+
+                if(rotationType == 3 && !rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 1 && rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(rotationType == 0 && !rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 2 && rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(rotationType == 1 && !rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 3 && rotateType)
+                {
+                    transform.position += new Vector3(1, 0, 0);
+                }else if(rotationType == 2 && !rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }else if(rotationType == 0 && rotateType)
+                {
+                    transform.position += new Vector3(-1, 0, 0);
+                }
+
+                if(!ValidMovement())
+                {
+                    if(rotateType)
+                    {
+                        transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
+                    }else{
+                        transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
+                    }
+
+                    return false;
+                }
+            break;
+        }
+        return false;
     }
 
     void RotateRight()
@@ -394,7 +769,7 @@ public class Mino : MonoBehaviour
             int roundY = Mathf.RoundToInt(children.transform.position.y);
 
             // minoがステージよりはみ出さないように制御
-            if (roundX < 0 || roundX >= width || roundY < 0 || roundY >= height)
+            if (roundX < 2 || roundX >= width + 2 || roundY < 2 || roundY >= height + 2 )
             {
                 return false;
             }
