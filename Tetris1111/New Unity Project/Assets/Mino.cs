@@ -172,8 +172,10 @@ public class Mino : MonoBehaviourPunCallbacks
     {
         for (int j = (width-8); j < width + 2; j++)
         {
-            Destroy(grid[j, i].gameObject);
-            grid[j, i] = null;
+            if(grid[j,i]!=null){
+                Destroy(grid[j, i].gameObject);
+                grid[j, i] = null;
+            }
         }
 
     }
