@@ -47,13 +47,13 @@ public class Connect : MonoBehaviourPunCallbacks
         //p1かp2で座標を変える
         if(Player.ActorNumber == 1)
         {
-            x = 5;
-            y = 18;
+            x = 6;
+            y = 20;
 
         }else
         {
-            x = 25;
-            y = 18;
+            x = 26;
+            y = 20;
         }
 
         Shuffle();
