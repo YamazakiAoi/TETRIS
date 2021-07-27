@@ -181,7 +181,7 @@ public class Mino : MonoBehaviourPunCallbacks
         {
             if(info.Sender.ActorNumber ==1)
             {
-                width = 10;
+                width = 30;
                 for (int j = (width-8); j < width + 2; j++)
                 {
                     if(grid[j,i]!=null){
@@ -191,10 +191,10 @@ public class Mino : MonoBehaviourPunCallbacks
                 }
                 RowDown(i);
 
-                width=30;
+                width=10;
             }else
             {
-                width = 30;
+                width = 10;
 
                 for (int j = (width-8); j < width + 2; j++)
                 {
@@ -206,7 +206,7 @@ public class Mino : MonoBehaviourPunCallbacks
 
                 RowDown(i);
 
-                width =10;
+                width =30;
             }
         }
         else
