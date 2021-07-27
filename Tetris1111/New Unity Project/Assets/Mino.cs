@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class Mino : MonoBehaviour
+public class Mino : MonoBehaviourPunCallbacks
 {
     public float previousTime;
     // minoの落ちる時間
     public float fallTime = 1f;
 
+    
     // ステージの大きさ
     private static int width = 10;
     private static int height = 20;
@@ -20,16 +23,23 @@ public class Mino : MonoBehaviour
     private int rotationType = 0;
 
     // grid
-    private static Transform[,] grid = new Transform[width + 4, height + 2];
+    private static Transform[,] grid = new Transform[30 + 4, height + 2];
 
     
     void Start ()
     {
-        for(int i = 0; i < width + 4; i ++)
+        Photon.Realtime.Player Player = PhotonNetwork.LocalPlayer;
+        if(Player.ActorNumber == 2)
+        {
+            width=30;
+        }
+
+        //壁の判定を創る
+        for(int i = (width-10); i < width + 4; i ++)
         {
             for (int j = 0; j < height + 2;j++)
             {
-                if(i == 0 || i == 1 ||j == 0 || j ==1 || i == width + 2 || i == width +3)
+                if(i == (width-10) || i ==(width-9) ||j == 0 || j ==1 || i == width + 2 || i == width +3)
                 {
                     grid[i,j] = wall;
                 }
@@ -39,8 +49,11 @@ public class Mino : MonoBehaviour
 
     void Update()
     {
-        MinoMovememt();
-        Debug.Log(this.name);
+        if(photonView.IsMine)
+        {
+            MinoMovememt();
+            //Debug.Log(this.name);
+        }
     }
 
     private void MinoMovememt()
@@ -78,7 +91,7 @@ public class Mino : MonoBehaviour
                 // 今回の追加
                 CheckLines();
                 this.enabled = false;
-                FindObjectOfType<SpawnMino>().NewMino();
+                FindObjectOfType<Connect>().NewMino(width-5,height-2);
                 
             }
 
@@ -96,7 +109,7 @@ public class Mino : MonoBehaviour
                 // 今回の追加
                 CheckLines();
                 this.enabled = false;
-                FindObjectOfType<SpawnMino>().NewMino();
+                FindObjectOfType<Connect>().NewMino(width-5,height-2);
                 
             }
 
@@ -141,7 +154,7 @@ public class Mino : MonoBehaviour
     // 今回の追加 列がそろっているか確認
     bool HasLine(int i)
     {
-        for (int j = 1; j < width + 1; j++)
+        for (int j = (width-9); j < width + 1; j++)
         {
             if (grid[j, i] == null)
                 return false;
@@ -152,7 +165,7 @@ public class Mino : MonoBehaviour
     // 今回の追加 ラインを消す
     void DeleteLine(int i)
     {
-        for (int j = 2; j < width + 2; j++)
+        for (int j = (width-8); j < width + 2; j++)
         {
             Destroy(grid[j, i].gameObject);
             grid[j, i] = null;
@@ -165,7 +178,7 @@ public class Mino : MonoBehaviour
     {
         for (int y = i; y < height + 1; y++)
         {
-            for (int j = 2; j < width + 2; j++)
+            for (int j = (width-8); j < width + 2; j++)
             {
                 if (grid[j, y] != null)
                 {
@@ -769,8 +782,9 @@ public class Mino : MonoBehaviour
             int roundY = Mathf.RoundToInt(children.transform.position.y);
 
             // minoがステージよりはみ出さないように制御
-            if (roundX < 2 || roundX >= width + 2 || roundY < 2 || roundY >= height + 2 )
+            if (roundX < (width-9) || roundX >= width + 1 || roundY < 2 || roundY >= height + 2 )
             {
+                //Debug.Log("はみだしてます！");
                 return false;
             }
             if (grid[roundX, roundY] != null)
