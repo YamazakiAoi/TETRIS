@@ -147,10 +147,10 @@ public class Mino : MonoBehaviourPunCallbacks
         {
             if (HasLine(i))
             {
-                DeleteLine(i);
-                RowDown(i);
-                //PhotonView.RPC(nameof(DeleteLine_enemy),RpcTarget.Others,i);
-                //PhotonView.RPC(nameof(RowDown_enemy),RpcTarget.Others,i);
+                //DeleteLine(i);
+                //RowDown(i);
+                photonView.RPC(nameof(DeleteLine),RpcTarget.All,i);
+                photonView.RPC(nameof(RowDown),RpcTarget.All,i);
             }
         }
     }
@@ -167,7 +167,8 @@ public class Mino : MonoBehaviourPunCallbacks
     }
 
     // 今回の追加 ラインを消す
-    void DeleteLine(int i)
+    [PunRPC]
+    public void DeleteLine(int i)
     {
         for (int j = (width-8); j < width + 2; j++)
         {
@@ -178,6 +179,7 @@ public class Mino : MonoBehaviourPunCallbacks
     }
 
     // 今回の追加 列を下げる
+    [PunRPC]
     public void RowDown(int i)
     {
         for (int y = i; y < height + 1; y++)
