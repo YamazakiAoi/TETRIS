@@ -10,7 +10,7 @@ public class Mino : MonoBehaviourPunCallbacks
     // minoの落ちる時間
     public float fallTime = 1f;
 
-    
+    private bool Gameover_flag = false;
     // ステージの大きさ
     private static int width = 10;
     private static int height = 20;
@@ -91,7 +91,8 @@ public class Mino : MonoBehaviourPunCallbacks
                 // 今回の追加
                 CheckLines();
                 this.enabled = false;
-                FindObjectOfType<Connect>().NewMino(width-5,height-2);
+                if(!Gameover_flag)
+                FindObjectOfType<Connect>().NewMino(width-4,height);
                 
             }
 
@@ -109,7 +110,8 @@ public class Mino : MonoBehaviourPunCallbacks
                 // 今回の追加
                 CheckLines();
                 this.enabled = false;
-                FindObjectOfType<Connect>().NewMino(width-5,height-2);
+                if(!Gameover_flag)
+                FindObjectOfType<Connect>().NewMino(width-4,height);
                 
             }
 
@@ -147,6 +149,8 @@ public class Mino : MonoBehaviourPunCallbacks
             {
                 DeleteLine(i);
                 RowDown(i);
+                //PhotonView.RPC(nameof(DeleteLine_enemy),RpcTarget.Others,i);
+                //PhotonView.RPC(nameof(RowDown_enemy),RpcTarget.Others,i);
             }
         }
     }
@@ -190,6 +194,22 @@ public class Mino : MonoBehaviourPunCallbacks
         }
     }
 
+
+
+ /*
+    [PunRPC]
+    private void DeleteLine_enemy(int i)
+    {
+        
+    }
+
+    [PunRPC]
+    private void RowDown_enemy(int i)
+    {
+
+    }
+
+*/
     void AddToGrid() 
     {
         
@@ -200,6 +220,12 @@ public class Mino : MonoBehaviourPunCallbacks
 
            // Debug.Log(roundX);
             Debug.Log(Mathf.RoundToInt(transform.position.x));
+
+            if(roundY == height)
+            {
+                Gameover_flag = true;
+                return;
+            }
             
             grid[roundX, roundY] = children;
         }
