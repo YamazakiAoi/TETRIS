@@ -12,7 +12,7 @@ public class Mino : MonoBehaviourPunCallbacks
 
     private bool Gameover_flag = false;
     // ステージの大きさ
-    private static int width = 10;
+    private int width = 10;
     private static int height = 20;
 
     public Transform wall;
