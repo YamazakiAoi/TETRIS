@@ -362,6 +362,8 @@ public class Mino : MonoBehaviourPunCallbacks
                         rotationType = Reset_type;
                     }
                         
+
+                        
                 }
             break;
         }
