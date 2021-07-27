@@ -53,6 +53,11 @@ public class Mino : MonoBehaviourPunCallbacks
         {
             MinoMovememt();
             //Debug.Log(this.name);
+            if(Gameover_flag==true)
+            {
+                Debug.Log("You Lose");
+                PhotonNetwork.LeaveRoom();
+            }
         }
     }
 
@@ -150,7 +155,7 @@ public class Mino : MonoBehaviourPunCallbacks
                 //DeleteLine(i);
                 //RowDown(i);
                 photonView.RPC(nameof(DeleteLine),RpcTarget.All,i);
-                photonView.RPC(nameof(RowDown),RpcTarget.All,i);
+                //photonView.RPC(nameof(RowDown),RpcTarget.All,i);
             }
         }
     }
@@ -168,16 +173,55 @@ public class Mino : MonoBehaviourPunCallbacks
 
     // 今回の追加 ラインを消す
     [PunRPC]
-    public void DeleteLine(int i)
+    public void DeleteLine(int i,PhotonMessageInfo info)
     {
-        for (int j = (width-8); j < width + 2; j++)
+        Photon.Realtime.Player Player = PhotonNetwork.LocalPlayer;
+
+        if(info.Sender.ActorNumber != Player.ActorNumber)
         {
-            if(grid[j,i]!=null){
-                Destroy(grid[j, i].gameObject);
-                grid[j, i] = null;
+            if(info.Sender.ActorNumber ==1)
+            {
+                width = 10;
+                for (int j = (width-8); j < width + 2; j++)
+                {
+                    if(grid[j,i]!=null){
+                        Destroy(grid[j, i].gameObject);
+                    grid[j, i] = null;
+                    }
+                }
+                RowDown(i);
+
+                width=30;
+            }else
+            {
+                width = 30;
+
+                for (int j = (width-8); j < width + 2; j++)
+                {
+                    if(grid[j,i]!=null){
+                        Destroy(grid[j, i].gameObject);
+                        grid[j, i] = null;
+                    }
+                }
+
+                RowDown(i);
+
+                width =10;
             }
         }
+        else
+        {
+        //自分だったら
+            for (int j = (width-8); j < width + 2; j++)
+            {
+                if(grid[j,i]!=null){
+                    Destroy(grid[j, i].gameObject);
+                    grid[j, i] = null;
+                }
+            }
 
+            RowDown(i);
+        }
     }
 
     // 今回の追加 列を下げる
