@@ -154,7 +154,7 @@ public class Mino : MonoBehaviourPunCallbacks
     // 今回の追加 列がそろっているか確認
     bool HasLine(int i)
     {
-        for (int j = (width-9); j < width + 1; j++)
+        for (int j = (width-8); j < width + 2; j++)
         {
             if (grid[j, i] == null)
                 return false;
@@ -782,7 +782,7 @@ public class Mino : MonoBehaviourPunCallbacks
             int roundY = Mathf.RoundToInt(children.transform.position.y);
 
             // minoがステージよりはみ出さないように制御
-            if (roundX < (width-9) || roundX >= width + 1 || roundY < 2 || roundY >= height + 2 )
+            if (roundX < (width-8) || roundX > width + 1 || roundY < 2 || roundY >= height + 2 )
             {
                 //Debug.Log("はみだしてます！");
                 return false;
